@@ -22,6 +22,7 @@ from rest_framework.documentation import include_docs_urls
 urlpatterns = [
     path("api/admin/", admin.site.urls),
     path("api/auth/", include("user_management.urls")),
+    path("api/plants/", include("plants.urls")),
     path("api/docs/", include_docs_urls(title="Nursery Market")),
 ]
 

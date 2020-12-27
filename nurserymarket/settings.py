@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from datetime import datetime, timedelta
 from pathlib import Path
-
+import os
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "user_management",
+    "plants",
 ]
 
 if DEBUG:
@@ -136,6 +137,10 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+# Media
+MEDIA_ROOT = os.path.abspath("..")
+MEDIA_URL = "/media/"
+
 # Custom JWT
 JWT_AUTH = {
     "JWT_EXPIRATION_DELTA": datetime.utcnow() + timedelta(days=30),
@@ -149,9 +154,9 @@ INTERNAL_IPS = [
 
 # Rest Framework
 REST_FRAMEWORK = {
-    "DEFAULT_RENDERER_CLASSES": [
+    "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
-    ],
+    ),
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 }

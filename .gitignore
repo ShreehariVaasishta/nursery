@@ -4,6 +4,9 @@ db.sqlite3
 __pycache__
 static/
 .env
+files/
 nurserymarket/__pycache__/
 user_management/migrations/
 user_management/__pycache__/
+plants/migrations/
+plants/__pycache__/

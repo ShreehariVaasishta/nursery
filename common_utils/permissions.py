@@ -4,7 +4,7 @@ from rest_framework.permissions import BasePermission
 # Custom Permissions
 class IsBuyerUser(BasePermission):
     def has_permission(self, request, view):
-        if request.user.user_type == "buyer":
+        if request.user.IsBuyer:
             return True
         else:
             return False
@@ -12,7 +12,7 @@ class IsBuyerUser(BasePermission):
 
 class IsNurseryUser(BasePermission):
     def has_permission(self, request, view):
-        if request.user.user_type == "nursery":
+        if request.user.IsNursery:
             return True
         else:
             return False
