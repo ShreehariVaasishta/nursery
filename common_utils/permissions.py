@@ -2,23 +2,15 @@ from rest_framework.permissions import BasePermission
 
 
 # Custom Permissions
-class IsUser(BasePermission):
-    def __init__(self, allowed_methods):
-        super().__init__()
-        self.allowed_methods = allowed_methods
-
+class IsBuyerUser(BasePermission):
     def has_permission(self, request, view):
-        if request.user.user_type == "user":
+        if request.user.user_type == "buyer":
             return True
         else:
             return False
 
 
-class IsNursery(BasePermission):
-    def __init__(self, allowed_methods):
-        super().__init__()
-        self.allowed_methods = allowed_methods
-
+class IsNurseryUser(BasePermission):
     def has_permission(self, request, view):
         if request.user.user_type == "nursery":
             return True
