@@ -81,6 +81,7 @@ class Nursery(models.Model):
     about = models.TextField(_("About"))
     isdeleted = models.BooleanField(_("User deleted"), default=False)
     ratings = models.CharField(max_length=10, choices=RATINGS_CHOICES, default=ONE)
+    IsNursery = models.BooleanField(default=True, editable=False)
     isdeleted = models.BooleanField(_("User deleted"), default=False)
 
     created_at = models.DateTimeField(default=timezone.now)
@@ -100,6 +101,7 @@ class Buyer(models.Model):
     first_name = models.CharField(_("First Name"), max_length=100, blank=False, null=False)
     middle_name = models.CharField(_("Middle Name"), max_length=100, blank=True, null=True, default="")
     last_name = models.TextField(_("Last Name"), max_length=100, blank=True, null=True, default="")
+    IsBuyer = models.BooleanField(default=True, editable=False)
     isdeleted = models.BooleanField(_("User deleted"), default=False)
 
     created_at = models.DateTimeField(default=timezone.now)

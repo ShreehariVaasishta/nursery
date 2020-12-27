@@ -11,7 +11,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
 from common_utils.custom_auth import TokenAuthentication, generate_token
-from common_utils.permissions import IsNursery, IsUser
+from common_utils.permissions import IsNurseryUser, IsBuyerUser
 from common_utils.response import response
 
 from .models import Nursery, Buyer

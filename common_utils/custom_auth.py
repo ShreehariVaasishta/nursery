@@ -17,6 +17,7 @@ class TokenAuthentication(BaseAuthentication):
         return model[user_type]
 
     def authenticate(self, request):
+
         auth = get_authorization_header(request).split()
         if not auth or auth[0].lower() != b"bearer":
             msg = "Invalid token header."
