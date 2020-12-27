@@ -1,0 +1,9 @@
+.env
+.vscode/
+db.sqlite3
+__pycache__
+static/
+.env
+nurserymarket/__pycache__/
+user_management/migrations/
+user_management/__pycache__/
