@@ -17,10 +17,10 @@ Please Refer [requirements.txt](https://github.com/ShreehariVaasishta/nursery/bl
 -  Create a <b>PostgreSQL database.</b><br>
   create `.env` file in the project root directory and add following in the .env file:
   
-        SECRET_KEY = #(#2oj20fqshsa)n!xc)9%^4w2b)4he5uih!yli@)rr%l4c^^g
-        db_name = nursery_dphi
-        db_user = hari
-        db_user_password = Auden123
+        SECRET_KEY = <your_django_secret_key>
+        db_name = <database_name>
+        db_user = <database_user>
+        db_user_password = <database_password>
         
 
 -  Migrate database
@@ -47,4 +47,4 @@ Please Refer [requirements.txt](https://github.com/ShreehariVaasishta/nursery/bl
 ```python
         python3 manage.py createsuperuser
 ```  
-   enter email, name and password and start server again.
+   enter email, name and password and start the server again.
