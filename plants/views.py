@@ -224,27 +224,21 @@ class AddGetCartApiView(APIView):
 
     def get(self, request):
         try:
-            cart_instance = (
+            cart_values = (
                 Cart.objects.filter(user_id=request.user.id)
                 .select_related("buyer", "plant")
                 .values(
                     "id",
-                    "buyer_id",
-                    "buyer__first_name",
-                    "buyer__email",
                     "plant_id",
                     "plant__name",
                     "plant__owner_id",
                     "plant__owner__name",
                     "plant__owner__email",
                     "total",
-                    "is_payed",
-                    "order_status",
-                    "ordered_at",
+                    "created_at",
                 )
             )
-            # serialized = PlantCartSerializer(cart_instance, many=True).data
-            return response(status_code=stat_code.HTTP_200_OK, status=True, msg="Retreived Cart.", data=serialized)
+            return response(status_code=stat_code.HTTP_200_OK, status=True, msg="Retreived Cart.", data=cart_values)
         except Cart.DoesNotExist as cde:
             return response(
                 status_code=stat_code.HTTP_403_FORBIDDEN,
@@ -296,7 +290,7 @@ class AddGetOrderApiView(APIView):
     def post(self, request):
         try:
             place_order = Order.objects.create(
-                plant_id=request.data["plant_id"], user_id=request.user.id, quantity=request.data["quantity"]
+                plant_id=request.data["plant_id"], buyer=request.user.id, quantity=request.data["quantity"]
             )
             return response(status_code=stat_code.HTTP_200_OK, status=True, msg="New Order Placed successfully.")
         except Plants.DoesNotExist as cde:
@@ -407,7 +401,7 @@ class UpdateOrderStatusApiView(APIView):
                 serializer_class.save()
                 serialized = serializer_class.data
                 return response(
-                    status_code=stat_code.HTTP_200_OK, status=True, msg="Retreived order list(s).", data=serialized
+                    status_code=stat_code.HTTP_200_OK, status=True, msg="Retreived order details.", data=serialized
                 )
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=serializer_class.errors)
         except Order.DoesNotExist as ode:
