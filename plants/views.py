@@ -25,7 +25,6 @@ class PostListPlantsApiView(APIView):
 
     def post(self, request):
         try:
-            print(request.user.id, "<<<<<<<<<<<<<")
             if "image" not in request.data:
                 request.data["image"] = None
             instances = Plants.objects.create(
