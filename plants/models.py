@@ -10,14 +10,14 @@ def image_upload_path(instance, filename):
 
 
 class Plants(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
     name = models.CharField(_("Plant Name"), max_length=100, blank=False, null=False)
     owner = models.ForeignKey(Nursery, blank=False, null=False, on_delete=models.CASCADE)
     image = models.FileField(upload_to=image_upload_path, blank=True, null=True)
     plant_description = models.TextField(_("Plant Description"), max_length=200)
     price = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
     inStock = models.BooleanField(default=True)
-    isDeleted = models.BooleanField(default=False)
+    isDeleted = models.BooleanField(default=False, db_index=True)
 
     created_at = models.DateTimeField(default=timezone.now)
 
@@ -35,7 +35,7 @@ class Plants(models.Model):
 
 
 class Cart(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
     plant = models.ForeignKey(Plants, on_delete=models.CASCADE, blank=False, null=False)
     user = models.ForeignKey(Buyer, on_delete=models.Case, blank=False, null=False)
     quantity = models.PositiveIntegerField()
@@ -69,7 +69,7 @@ class Order(models.Model):
         (PENDING, "Pending"),
         (CONFIRMED, "Confirmed"),
     ]
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
     plant = models.ForeignKey(Plants, on_delete=models.CASCADE, blank=False, null=False)
     buyer = models.ForeignKey(Buyer, on_delete=models.Case, blank=False, null=False, help_text="Buyer")
     quantity = models.PositiveIntegerField()

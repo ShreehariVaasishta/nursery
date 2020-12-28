@@ -74,7 +74,7 @@ class Nursery(models.Model):
         (FOUR, 4),
         (FIVE, 5),
     ]
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
     email = models.EmailField(_("Email"), max_length=254, unique=True)
     password = models.TextField(_("password"), blank=False, null=False)
     name = models.CharField(_("Nursery Name"), max_length=100, blank=False, null=False)
@@ -82,7 +82,7 @@ class Nursery(models.Model):
     isdeleted = models.BooleanField(_("User deleted"), default=False)
     ratings = models.CharField(max_length=10, choices=RATINGS_CHOICES, default=ONE)
     IsNursery = models.BooleanField(default=True, editable=False)
-    isdeleted = models.BooleanField(_("User deleted"), default=False)
+    isdeleted = models.BooleanField(_("User deleted"), default=False, db_index=True)
 
     created_at = models.DateTimeField(default=timezone.now)
 
@@ -95,14 +95,14 @@ class Nursery(models.Model):
 
 
 class Buyer(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
     email = models.EmailField(_("Email"), max_length=254, unique=True)
     password = models.CharField(_("password"), max_length=128, blank=False, null=False)
     first_name = models.CharField(_("First Name"), max_length=100, blank=False, null=False)
     middle_name = models.CharField(_("Middle Name"), max_length=100, blank=True, null=True, default="")
     last_name = models.TextField(_("Last Name"), max_length=100, blank=True, null=True, default="")
     IsBuyer = models.BooleanField(default=True, editable=False)
-    isdeleted = models.BooleanField(_("User deleted"), default=False)
+    isdeleted = models.BooleanField(_("User deleted"), default=False, db_index=True)
 
     created_at = models.DateTimeField(default=timezone.now)
 
