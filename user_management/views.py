@@ -81,7 +81,7 @@ class NurseryRegisterationApiView(APIView):
             return response(
                 status_code=stat_code.HTTP_403_FORBIDDEN,
                 status=False,
-                msg="User(Buyer) with this email already exist.",
+                msg="User(Nursery) with this email exists.",
             )
         except Exception as e:
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))
@@ -93,9 +93,11 @@ class BuyerLoginApiView(APIView):
     login user and return jwt token
     """
 
+    permission_classes = (AllowAny,)
+
     def post(self, request):
         try:
-            user = Buyer.objects.get(email=request.data["email"])
+            user = Buyer.objects.only("email").get(email=request.data["email"])
             password_matched = check_password(request.data["password"], user.password)
             if password_matched:
                 user_type = "buyer"
@@ -122,7 +124,7 @@ class NurseryLoginApiView(APIView):
     def post(self, request):
         try:
 
-            user = Nursery.objects.get(email=request.data["email"])
+            user = Nursery.objects.only("email", "id").get(email=request.data["email"])
             password_matched = check_password(request.data["password"], user.password)
             if password_matched:
                 user_type = "nursery"
@@ -156,7 +158,7 @@ class BuyerRetreiveUpdateDeleteApiView(APIView):
 
     def get(self, request):
         try:
-            user = Buyer.objects.get(id=request.user.id)
+            user = Buyer.objects.get(pk=request.user.id)
             serialized = BuyerSerializer(user).data
             return response(
                 status_code=stat_code.HTTP_200_OK, status=True, msg="Retrieved user data.", data=serialized
@@ -220,7 +222,7 @@ class NurseryRetreiveUpdateDeleteApiView(APIView):
 
     def get(self, request):
         try:
-            user = Nursery.objects.get(id=request.user.id)
+            user = Nursery.objects.get(pk=request.user.id)
             serialized = NurserySerializer(user).data
             return response(
                 status_code=stat_code.HTTP_200_OK, status=True, msg="Retrieved user data.", data=serialized
