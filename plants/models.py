@@ -41,7 +41,7 @@ class Cart(models.Model):
     plant = models.ForeignKey(Plants, on_delete=models.CASCADE, blank=False, null=False)
     user = models.ForeignKey(Buyer, on_delete=models.Case, blank=False, null=False)
     quantity = models.PositiveIntegerField()
-    total = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    total = models.DecimalField(max_digits=1000, decimal_places=2, default=0.00)
 
     created_at = models.DateTimeField(default=timezone.now)
 
@@ -75,7 +75,7 @@ class Order(models.Model):
     plant = models.ForeignKey(Plants, on_delete=models.CASCADE, blank=False, null=False)
     buyer = models.ForeignKey(Buyer, on_delete=models.Case, blank=False, null=False, help_text="Buyer")
     quantity = models.PositiveIntegerField()
-    total = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    total = models.DecimalField(max_digits=1000, decimal_places=2, default=0.00)
     is_payed = models.BooleanField(default=False)
     order_status = models.CharField(_("Order Status"), max_length=10, choices=ORDER_STATUS, default=PENDING)
 
