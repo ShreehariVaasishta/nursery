@@ -12,6 +12,7 @@ class BuyerSerializer(serializers.ModelSerializer):
             "first_name",
             "middle_name",
             "last_name",
+            "get_full_name",
             "created_at",
             "isdeleted",
         )
