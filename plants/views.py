@@ -14,9 +14,17 @@ from .serializers import PlantsSerializer, PlantCartSerializer, PlantOrderSerial
 class PostListPlantsApiView(APIView):
     """
     post:
+    Use nursery user token.
     post new plants
+    {
+        "name": "plant name",
+        "plant_description": "lorem ipsum",
+        "price": 250 (upto to decimals),
+        "inStock": true (bool)
+    }
 
     get:
+    Use nursery user token.
     returns list of plants posted by the requesting user
     """
 
@@ -76,6 +84,7 @@ class PostListPlantsApiView(APIView):
 class ListPlantsApiView(APIView):
     """
     get:
+    use nursery/buyer user token.
     returns list of all plants for both buyers and nurseries
     """
 
@@ -112,9 +121,18 @@ class ListPlantsApiView(APIView):
 class UpdateDeletePlantsApiView(APIView):
     """
     put:
+    use nursery user token
     update data of a specific plant
+    {
+        "name": "Aglaonema",
+        "plant_description": "plant_description11111",
+        "price": 25.25,
+        "inStock": false,
+        "isDeleted": false
+    }
 
     delete:
+    use nursery user token
     delete a specific plant
     """
 
@@ -152,9 +170,11 @@ class AddGetCartApiView(APIView):
     post:
     add to cart
     if exists, quantity is updated
+    use buyer user token
 
     get:
-    receive cart of a specific buyer
+    receive cart of a buyer
+    use buyer user token
     """
 
     authentication_classes = (TokenAuthentication,)
@@ -207,6 +227,7 @@ class DeleteCartApiView(APIView):
     """
     delete:
     delete a item from cart
+    use buyer user token
     """
 
     authentication_classes = (TokenAuthentication,)
@@ -230,9 +251,11 @@ class AddGetOrderApiView(APIView):
     """
     post:
     place an order
+    use buyer user token
 
     get:
     list of all orders placed
+    use buyer user token
     """
 
     authentication_classes = (TokenAuthentication,)
@@ -285,6 +308,7 @@ class NurseryViewOrdersApiView(APIView):
     """
     get:
     list of all orders placed
+    use nursery user token
     """
 
     authentication_classes = (TokenAuthentication,)
@@ -323,6 +347,16 @@ class UpdateOrderStatusApiView(APIView):
     """
     put:
     update
+    use nursery user token
+    {
+        "order_status": "PENDING"
+    }
+    CHOICES :
+        DELIVERED,
+        CANCELLED,
+        ON_THE_WAY
+        PENDING,
+        CONFIRMED,
     """
 
     authentication_classes = (TokenAuthentication,)

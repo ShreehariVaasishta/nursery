@@ -24,6 +24,12 @@ class BuyerRegisterationApiView(APIView):
     """
     post:
     create buyer user
+    {
+        "email": "Buyerhari@gmail.com",
+        "password": "Auden123",
+        "first_name": "Hari",
+        "middle_name": "Gary"
+    }
     """
 
     permission_classes = (AllowAny,)
@@ -58,6 +64,12 @@ class NurseryRegisterationApiView(APIView):
     """
     post:
     create nursery user
+    {
+        "email": "gary222@gmail.com",
+        "password": "Auden123",
+        "name": "Blore's Nursery",
+        "about": "lorem ipsum"
+    }
     """
 
     permission_classes = (AllowAny,)
@@ -91,6 +103,10 @@ class BuyerLoginApiView(APIView):
     """
     post:
     login user and return jwt token
+    {
+        "email": "Buyerhari@gmail.com",
+        "password": "Auden123"
+    }
     """
 
     permission_classes = (AllowAny,)
@@ -119,6 +135,10 @@ class NurseryLoginApiView(APIView):
     """
     post:
     login user and return jwt token
+    {
+        "email": "gary222@gmail.com",
+        "password": "Auden123"
+    }
     """
 
     def post(self, request):
@@ -136,8 +156,10 @@ class NurseryLoginApiView(APIView):
             return response(
                 status_code=stat_code.HTTP_401_UNAUTHORIZED, status=False, msg="Invalid Credentials.", data=[]
             )
-        except Buyer.DoesNotExist as ude:
-            return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg="User does not exist.")
+        except Nursery.DoesNotExist as bde:
+            return response(
+                status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg="User does not exist, maybe deleted ?"
+            )
         except Exception as e:
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))
 
@@ -145,32 +167,44 @@ class NurseryLoginApiView(APIView):
 class BuyerRetreiveUpdateDeleteApiView(APIView):
     """
     get:
-    returns user details
+    returns requesting user details
+    Use buyer user jwt token
 
     put:
-    update user details
+    update requesting user details
+    {
+        "first_name": "Hari",
+        "middle_name": "Vasishta",
+        "last_name": "L"
+    }
+    Use buyer user jwt token
 
     delete:
-    delete user
+    Delete requesting user profile
+    Not exactly deleting from the database.
+    updating isDeleted = True.
+    Use buyer user jwt token
     """
 
     authentication_classes = (TokenAuthentication,)
 
     def get(self, request):
         try:
-            user = Buyer.objects.get(pk=request.user.id)
+            user = Buyer.objects.exclude(isdeleted=True).get(pk=request.user.id)
             serialized = BuyerSerializer(user).data
             return response(
                 status_code=stat_code.HTTP_200_OK, status=True, msg="Retrieved user data.", data=serialized
             )
         except Buyer.DoesNotExist as ude:
-            return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg="User does not exist.")
+            return response(
+                status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg="User does not exist, might be deleted ?"
+            )
         except Exception as e:
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))
 
     def put(self, request):
         try:
-            user = get_object_or_404(Buyer.objects.all(), pk=request.user.id)
+            user = Buyer.objects.exclude(isdeleted=True).get(pk=request.user.id)
             if "password" in request.data:
                 del request.data["password"]
             if "email" in request.data:
@@ -186,7 +220,9 @@ class BuyerRetreiveUpdateDeleteApiView(APIView):
                 return response(status_code=stat_code.HTTP_200_OK, status=True, msg="Retrieved user data.", data=data)
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=serializer_class.errors)
         except Buyer.DoesNotExist as ude:
-            return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg="User does not exist.")
+            return response(
+                status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg="User does not exist, might be deleted ?"
+            )
         except Exception as e:
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))
 
@@ -210,19 +246,27 @@ class NurseryRetreiveUpdateDeleteApiView(APIView):
     """
     get:
     returns user details
+    use nursery user token
 
     put:
-    update user details
+    update user details - about section only. name will not be updated
+    {
+        "about": "bye byeb"
+    }
+    Use buyer user jwt token
 
     delete:
-    delete user
+    Delete requesting user profile
+    Not exactly deleting from the database.
+    updating isDeleted = True.
+    use nursery user token
     """
 
     authentication_classes = (TokenAuthentication,)
 
     def get(self, request):
         try:
-            user = Nursery.objects.get(pk=request.user.id)
+            user = Nursery.objects.exclude(isDeleted=True).get(pk=request.user.id)
             serialized = NurserySerializer(user).data
             return response(
                 status_code=stat_code.HTTP_200_OK, status=True, msg="Retrieved user data.", data=serialized
@@ -234,7 +278,7 @@ class NurseryRetreiveUpdateDeleteApiView(APIView):
 
     def put(self, request):
         try:
-            user = get_object_or_404(Nursery.objects.all(), pk=request.user.id)
+            user = Nursery.objects.exclude(isDeleted=True).get(pk=request.user.id)
             if "ratings" in request.data:
                 del request.data["ratings"]
             if "email" in request.data:
