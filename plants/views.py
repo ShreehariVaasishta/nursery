@@ -118,8 +118,12 @@ class ListPlantsApiView(APIView):
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))
 
 
-class UpdateDeletePlantsApiView(APIView):
+class RetreiveUpdateDeletePlantsApiView(APIView):
     """
+    get:
+    use nursery user token.
+    return data of a particular plant.
+
     put:
     use nursery user token
     update data of a specific plant
@@ -138,6 +142,18 @@ class UpdateDeletePlantsApiView(APIView):
 
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsNurseryUser,)
+
+    def get(self, request, plant_id):
+        try:
+            plant_instance = Plants.objects.exclude(isDeleted=True).get(id=plant_id, owner_id=request.user.id)
+            serialized = PlantsSerializer(plant_instance).data
+            return response(
+                status_code=stat_code.HTTP_200_OK, status=True, msg="Retreived successfully.", data=serialized
+            )
+        except Plants.DoesNotExist as ude:
+            return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg="Plant does not exist.")
+        except Exception as e:
+            return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))
 
     def put(self, request, plant_id):
         try:
