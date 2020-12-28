@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Plants
+from .models import Plants, Cart, Order
 
 # Serializers
 class PlantsSerializer(serializers.ModelSerializer):
@@ -16,4 +16,32 @@ class PlantsSerializer(serializers.ModelSerializer):
             "price",
             "inStock",
             "isDeleted",
+        )
+
+
+class PlantCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = (
+            "id",
+            "user",
+            "plant",
+            "quantity",
+            "total",
+            "created_at",
+        )
+
+
+class PlantOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = (
+            "id",
+            "buyer",
+            "plant",
+            "quantity",
+            "total",
+            "is_payed",
+            "order_status",
+            "ordered_at",
         )

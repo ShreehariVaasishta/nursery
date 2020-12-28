@@ -22,6 +22,7 @@ class Plants(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
+        ordering = ("name",)
         verbose_name = _("Nursery - Plants")
         verbose_name_plural = _("Nursery - Plants")
 
@@ -31,3 +32,59 @@ class Plants(models.Model):
     @property
     def get_image_path(self):
         return self.image.path
+
+
+class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    plant = models.ForeignKey(Plants, on_delete=models.CASCADE, blank=False, null=False)
+    user = models.ForeignKey(Buyer, on_delete=models.Case, blank=False, null=False)
+    quantity = models.PositiveIntegerField()
+    total = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = _("Nursery - Carts")
+        verbose_name_plural = _("Nursery - Carts")
+
+    def __str__(self):
+        return f"{self.id}"
+
+    def save(self, *args, **kwargs):
+        self.total = self.plant.price * self.quantity
+        super(Cart, self).save(*args, **kwargs)
+
+
+class Order(models.Model):
+    DELIVERED = "DELIVERED"
+    CANCELLED = "CANCELLED"
+    ON_THE_WAY = "ON_THE_WAY"
+    PENDING = "PENDING"
+    CONFIRMED = "CONFIRMED"
+    ORDER_STATUS = [
+        (DELIVERED, "Delivered"),
+        (CANCELLED, "Cancelled"),
+        (ON_THE_WAY, "On the way"),
+        (PENDING, "Pending"),
+        (CONFIRMED, "Confirmed"),
+    ]
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    plant = models.ForeignKey(Plants, on_delete=models.CASCADE, blank=False, null=False)
+    buyer = models.ForeignKey(Buyer, on_delete=models.Case, blank=False, null=False, help_text="Buyer")
+    quantity = models.PositiveIntegerField()
+    total = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    is_payed = models.BooleanField(default=False)
+    order_status = models.CharField(_("Order Status"), max_length=10, choices=ORDER_STATUS, default=PENDING)
+
+    ordered_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        verbose_name = _("Nursery - Orders")
+        verbose_name_plural = _("Nursery - Orders")
+
+    def __str__(self):
+        return f"{self.id}"
+
+    def save(self, *args, **kwargs):
+        self.total = self.plant.price * self.quantity
+        super(Order, self).save(*args, **kwargs)
