@@ -47,13 +47,27 @@ class PostListPlantsApiView(APIView):
 
     def get(self, request):
         try:
-            instances = Plants.objects.filter(owner_id=request.user.id).exclude(isDeleted=True)
-            serialized = PlantsSerializer(instances, many=True).data
+            vals = (
+                Plants.objects.filter(owner_id=request.user.id)
+                .select_related("owner")
+                .exclude(isDeleted=True)
+                .values(
+                    "id",
+                    "name",
+                    "owner_id",
+                    "owner__name",
+                    "owner__email",
+                    "image",
+                    "plant_description",
+                    "price",
+                    "inStock",
+                )
+            )
             return response(
                 status_code=stat_code.HTTP_200_OK,
                 status=True,
                 msg="Retreived list of plants.",
-                data=serialized,
+                data=vals,
             )
         except Exception as e:
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))
@@ -62,20 +76,34 @@ class PostListPlantsApiView(APIView):
 class ListPlantsApiView(APIView):
     """
     get:
-    returns list of all plants
+    returns list of all plants for both buyers and nurseries
     """
 
     authentication_classes = (TokenAuthentication,)
 
     def get(self, request):
         try:
-            instances = Plants.objects.all().exclude(isDeleted=True)
-            serialized = PlantsSerializer(instances, many=True).data
+            instances = (
+                Plants.objects.all()
+                .select_related("owner")
+                .exclude(isDeleted=True)
+                .values(
+                    "id",
+                    "name",
+                    "owner_id",
+                    "owner__name",
+                    "owner__email",
+                    "image",
+                    "plant_description",
+                    "price",
+                    "inStock",
+                )
+            )
             return response(
                 status_code=stat_code.HTTP_200_OK,
                 status=True,
                 msg="Retreived list of plants.",
-                data=serialized,
+                data=instances,
             )
         except Exception as e:
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))
@@ -227,10 +255,27 @@ class AddGetOrderApiView(APIView):
 
     def get(self, request):
         try:
-            order_instances = Order.objects.filter(user_id=request.user.id)
-            serialized = PlantOrderSerializer(order_instances, many=True).data
+            order_vals = (
+                Order.objects.filter(buyer_id=request.user.id)
+                .select_related("buyer", "plant")
+                .values(
+                    "id",
+                    "buyer_id",
+                    "buyer__first_name",
+                    "buyer__email",
+                    "plant_id",
+                    "plant__name",
+                    "plant__owner_id",
+                    "plant__owner__name",
+                    "plant__owner__email",
+                    "total",
+                    "is_payed",
+                    "order_status",
+                    "ordered_at",
+                )
+            )
             return response(
-                status_code=stat_code.HTTP_200_OK, status=True, msg="Retreived order list(s).", data=serialized
+                status_code=stat_code.HTTP_200_OK, status=True, msg="Retreived order list(s).", data=order_vals
             )
         except Exception as e:
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))
@@ -247,10 +292,28 @@ class NurseryViewOrdersApiView(APIView):
 
     def get(self, request):
         try:
-            order_instances = Order.objects.filter(plant__owner_id=request.user.id).order_by("-ordered_at")
-            serialized = PlantOrderSerializer(order_instances, many=True).data
+            order_vals = (
+                Order.objects.filter(plant__owner_id=request.user.id)
+                .select_related("plant", "buyer")
+                .order_by("-ordered_at")
+                .values(
+                    "id",
+                    "buyer_id",
+                    "buyer__first_name",
+                    "buyer__email",
+                    "plant_id",
+                    "plant__name",
+                    "plant__owner_id",
+                    "plant__owner__name",
+                    "plant__owner__email",
+                    "total",
+                    "is_payed",
+                    "order_status",
+                    "ordered_at",
+                )
+            )
             return response(
-                status_code=stat_code.HTTP_200_OK, status=True, msg="Retreived order list(s).", data=serialized
+                status_code=stat_code.HTTP_200_OK, status=True, msg="Retreived order list(s).", data=order_vals
             )
         except Exception as e:
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))
