@@ -90,8 +90,8 @@ class Nursery(models.Model):
         return self.email
 
     class Meta:
-        verbose_name = _("Nursery")
-        verbose_name_plural = _("Nursery")
+        verbose_name = _("EndUser - Nursery")
+        verbose_name_plural = _("EndUser - Nursery")
 
 
 class Buyer(models.Model):
@@ -116,5 +116,5 @@ class Buyer(models.Model):
         return self.email
 
     class Meta:
-        verbose_name = _("Buyer")
-        verbose_name_plural = _("Buyer")
+        verbose_name = _("EndUser - Buyer")
+        verbose_name_plural = _("EndUser - Buyer")
