@@ -29,7 +29,7 @@ Please Refer [requirements.txt](https://github.com/ShreehariVaasishta/nursery/bl
         python3 manage.py makemigrations
         python3 manage.py migrate
 ```    
-  <i>NOTE: if `makemigrations` show no migrations when trying for the first time migrate each app one after the other(Migrate user_management first and then rest of the apps for overriding django user model with our custom user model.</i>
+  <i>NOTE: if `makemigrations` show no migrations when trying for the first time migrate each app one after the other(Migrate user_management app first and then rest of the apps for overriding django user model with our custom user model.</i>
     
 ```python
         python3 manage.py makemigrations <app_name>
