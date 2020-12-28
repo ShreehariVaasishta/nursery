@@ -21,7 +21,8 @@ Please Refer [requirements.txt](https://github.com/ShreehariVaasishta/nursery/bl
         db_name = <database_name>
         db_user = <database_user>
         db_user_password = <database_password>
-        
+        host = <database_host>
+        port = <database_port>
 
 -  Migrate database
   
