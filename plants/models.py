@@ -31,6 +31,8 @@ class Plants(models.Model):
 
     @property
     def get_image_path(self):
+        if not self.image:
+            return None
         return self.image.path
 
 
