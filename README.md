@@ -18,11 +18,11 @@ Please Refer [requirements.txt](https://github.com/ShreehariVaasishta/nursery/bl
   create `.env` file in the project root directory and add following in the .env file:
   
         SECRET_KEY = <your_django_secret_key>
-        db_name = <database_name>
-        db_user = <database_user>
+        NAME = <database_name>
+        USER = <database_user>
         db_user_password = <database_password>
-        host = <database_host>
-        port = <database_port>
+        HOST = <database_host>
+        PORT = <database_port>
 
 -  Migrate database
   
