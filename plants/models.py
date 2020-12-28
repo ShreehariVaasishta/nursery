@@ -22,7 +22,7 @@ class Plants(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ("name",)
+        ordering = ("created_at",)
         verbose_name = _("Nursery - Plants")
         verbose_name_plural = _("Nursery - Plants")
 
@@ -44,6 +44,7 @@ class Cart(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
+        ordering = ("created_at",)
         verbose_name = _("Nursery - Carts")
         verbose_name_plural = _("Nursery - Carts")
 
@@ -79,6 +80,7 @@ class Order(models.Model):
     ordered_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
+        ordering = ("ordered_at",)
         verbose_name = _("Nursery - Orders")
         verbose_name_plural = _("Nursery - Orders")
 
