@@ -33,44 +33,41 @@ class PostListPlantsApiView(APIView):
 
     def post(self, request):
         try:
-            if "image" not in request.data:
-                request.data["image"] = None
+            if "plant_images" not in request.data:
+                request.data["plant_images"] = None
             instances = Plants.objects.create(
                 name=request.data["name"],
                 owner_id=request.user.id,
-                image=request.data["image"],
+                plant_images=request.data["plant_images"],
                 plant_description=request.data["plant_description"],
                 price=request.data["price"],
                 inStock=request.data["inStock"],
             )
-            serialized = PlantsSerializer(instances).data
             return response(
                 status_code=stat_code.HTTP_200_OK,
                 status=True,
                 msg="Plant posted successfully.",
-                data=serialized,
             )
         except Exception as e:
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))
 
     def get(self, request):
         try:
-            vals = (
-                Plants.objects.filter(owner_id=request.user.id)
-                .select_related("owner")
-                .exclude(isDeleted=True)
-                .values(
-                    "id",
-                    "name",
-                    "owner_id",
-                    "owner__name",
-                    "owner__email",
-                    "image",
-                    "plant_description",
-                    "price",
-                    "inStock",
-                )
-            )
+            instance = Plants.objects.filter(owner_id=request.user.id).select_related("owner").exclude(isDeleted=True)
+            vals = []
+            for i in instance.iterator():
+                _parse = {
+                    "id": i.id,
+                    "name": i.name,
+                    "owner_id": i.owner_id,
+                    "owner_name": i.owner.name,
+                    "owner_email": i.owner.email,
+                    "plant_images": i.plant_images.url,
+                    "plant_description": i.plant_description,
+                    "price": i.price,
+                    "inStock": i.inStock,
+                }
+                vals.append(_parse)
             return response(
                 status_code=stat_code.HTTP_200_OK,
                 status=True,
@@ -92,27 +89,26 @@ class ListPlantsApiView(APIView):
 
     def get(self, request):
         try:
-            instances = (
-                Plants.objects.all()
-                .select_related("owner")
-                .exclude(isDeleted=True)
-                .values(
-                    "id",
-                    "name",
-                    "owner_id",
-                    "owner__name",
-                    "owner__email",
-                    "image",
-                    "plant_description",
-                    "price",
-                    "inStock",
-                )
-            )
+            instances = Plants.objects.select_related("owner").all().exclude(isDeleted=True)
+            vals = []
+            for i in instances.iterator():
+                _parse = {
+                    "id": i.id,
+                    "name": i.name,
+                    "owner_id": i.owner_id,
+                    "owner_name": i.owner.name,
+                    "owner_email": i.owner.email,
+                    "plant_images": i.plant_images.url,
+                    "plant_description": i.plant_description,
+                    "price": i.price,
+                    "inStock": i.inStock,
+                }
+                vals.append(_parse)
             return response(
                 status_code=stat_code.HTTP_200_OK,
                 status=True,
                 msg="Retreived list of plants.",
-                data=instances,
+                data=vals,
             )
         except Exception as e:
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=str(e))

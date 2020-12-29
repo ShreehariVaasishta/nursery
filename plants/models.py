@@ -29,11 +29,10 @@ class Plants(models.Model):
     def __str__(self):
         return self.name
 
-    @property
     def get_image_path(self):
         if not self.plant_images:
             return None
-        return self.plant_images.path
+        return self.plant_images.url
 
 
 class Cart(models.Model):
