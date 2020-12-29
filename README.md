@@ -33,8 +33,9 @@ Please Refer [requirements.txt](https://github.com/ShreehariVaasishta/nursery/bl
     
 ```python
         python3 manage.py makemigrations <app_name>
-        python3 manage.py makemigrations user_management
+        example - python3 manage.py makemigrations user_management
 ``` 
+
 -  Run server
   
 ```python
@@ -48,3 +49,15 @@ Please Refer [requirements.txt](https://github.com/ShreehariVaasishta/nursery/bl
         python3 manage.py createsuperuser
 ```  
    enter email, name and password and start the server again.
+
+
+## Misc
+
+ - Import this postman collection in your postman desktop app  https://www.getpostman.com/collections/b9f2a4f0a382d8b054dc  for list of endpoints with their description.<br>
+   Also you can use https://dphi-nursery-sde.herokuapp.com/api/docs/
+
+ - Getting the following error ?
+        `AttributeError  'Nursery' object has no attribute 'IsBuyer' `   OR
+        `AttributeError  'Buyer' object has no attribute 'IsNursery' `
+        
+   Fix - Please check your request token.
