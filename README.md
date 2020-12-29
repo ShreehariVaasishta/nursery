@@ -14,13 +14,11 @@ Please Refer [requirements.txt](https://github.com/ShreehariVaasishta/nursery/bl
 
 **setup**
 
--  Create a <b>PostgreSQL database.</b><br>
-  create `.env` file in the project root directory and add following in the .env file:
-  
+-  Create a <b>PostgreSQL database.</b> and assign values for these in `settings.py` file.<br>
         SECRET_KEY = <your_django_secret_key>
         NAME = <database_name>
         USER = <database_user>
-        db_user_password = <database_password>
+        PASSWORD = <database_password>
         HOST = <database_host>
         PORT = <database_port>
 
