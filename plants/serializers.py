@@ -19,6 +19,18 @@ class PlantsSerializer(serializers.ModelSerializer):
         )
 
 
+class PlantsUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plants
+        fields = (
+            "name",
+            "plant_images",
+            "plant_description",
+            "price",
+            "inStock",
+        )
+
+
 class PlantCartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart

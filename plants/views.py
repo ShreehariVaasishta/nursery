@@ -8,7 +8,7 @@ from common_utils.permissions import IsNurseryUser, IsBuyerUser
 from common_utils.response import response
 
 from .models import Plants, Cart, Order
-from .serializers import PlantsSerializer, PlantCartSerializer, PlantOrderSerializer
+from .serializers import PlantsSerializer, PlantCartSerializer, PlantOrderSerializer, PlantsUpdateSerializer
 
 # Create your views here.
 class PostListPlantsApiView(APIView):
@@ -19,7 +19,7 @@ class PostListPlantsApiView(APIView):
     {
         "name": "plant name",
         "plant_description": "lorem ipsum",
-        "price": 250 (upto to decimals),
+        "price": 250 (upto to 2 decimals),
         "inStock": true (bool)
     }
 
@@ -56,13 +56,17 @@ class PostListPlantsApiView(APIView):
             instance = Plants.objects.filter(owner_id=request.user.id).select_related("owner").exclude(isDeleted=True)
             vals = []
             for i in instance.iterator():
+                try:
+                    img_url = i.plant_images.url
+                except Exception as e:
+                    img_url = None
                 _parse = {
                     "id": i.id,
                     "name": i.name,
                     "owner_id": i.owner_id,
                     "owner_name": i.owner.name,
                     "owner_email": i.owner.email,
-                    "plant_images": i.plant_images.url,
+                    "plant_images": img_url,
                     "plant_description": i.plant_description,
                     "price": i.price,
                     "inStock": i.inStock,
@@ -92,13 +96,17 @@ class ListPlantsApiView(APIView):
             instances = Plants.objects.select_related("owner").all().exclude(isDeleted=True)
             vals = []
             for i in instances.iterator():
+                try:
+                    img_url = i.plant_images.url
+                except Exception as e:
+                    img_url = None
                 _parse = {
                     "id": i.id,
                     "name": i.name,
                     "owner_id": i.owner_id,
                     "owner_name": i.owner.name,
                     "owner_email": i.owner.email,
-                    "plant_images": i.plant_images.url,
+                    "plant_images": img_url,
                     "plant_description": i.plant_description,
                     "price": i.price,
                     "inStock": i.inStock,
@@ -156,7 +164,9 @@ class RetreiveUpdateDeletePlantsApiView(APIView):
             if "owner" in request.data:
                 del request.data["owner"]
             plant_instance = Plants.objects.exclude(isDeleted=True).get(id=plant_id, owner_id=request.user.id)
-            serializer_class = PlantsSerializer(plant_instance, request.data, partial=True)  # accepts partial update
+            serializer_class = PlantsUpdateSerializer(
+                plant_instance, request.data, partial=True
+            )  # accepts partial update
             if serializer_class.is_valid(raise_exception=True):
                 serializer_class.save()
                 data = serializer_class.data
@@ -286,7 +296,7 @@ class AddGetOrderApiView(APIView):
     def post(self, request):
         try:
             place_order = Order.objects.create(
-                plant_id=request.data["plant_id"], buyer=request.user.id, quantity=request.data["quantity"]
+                plant_id=request.data["plant_id"], buyer_id=request.user.id, quantity=request.data["quantity"]
             )
             return response(status_code=stat_code.HTTP_200_OK, status=True, msg="New Order Placed successfully.")
         except Plants.DoesNotExist as cde:
@@ -392,6 +402,8 @@ class UpdateOrderStatusApiView(APIView):
             if "is_payed" in request.data:
                 _ord_stat["is_payed"] = request.data["is_payed"]
             order_instance = Order.objects.get(pk=order_id)
+            if order_instance.plant.owner.id != request.user.id:
+                return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg="Invalid order id")
             serializer_class = PlantOrderSerializer(order_instance, _ord_stat, partial=True)
             if serializer_class.is_valid(raise_exception=True):
                 serializer_class.save()

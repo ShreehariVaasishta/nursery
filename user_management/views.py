@@ -113,7 +113,7 @@ class BuyerLoginApiView(APIView):
 
     def post(self, request):
         try:
-            user = Buyer.objects.only("email").get(email=request.data["email"])
+            user = Buyer.objects.exclude(isdeleted=True).get(email=request.data["email"])
             password_matched = check_password(request.data["password"], user.password)
             if password_matched:
                 user_type = "buyer"
@@ -144,7 +144,7 @@ class NurseryLoginApiView(APIView):
     def post(self, request):
         try:
 
-            user = Nursery.objects.only("email", "id").get(email=request.data["email"])
+            user = Nursery.objects.exclude(isdeleted=True).get(email=request.data["email"])
             password_matched = check_password(request.data["password"], user.password)
             if password_matched:
                 user_type = "nursery"
@@ -266,7 +266,7 @@ class NurseryRetreiveUpdateDeleteApiView(APIView):
 
     def get(self, request):
         try:
-            user = Nursery.objects.exclude(isDeleted=True).get(pk=request.user.id)
+            user = Nursery.objects.exclude(isdeleted=True).get(pk=request.user.id)
             serialized = NurserySerializer(user).data
             return response(
                 status_code=stat_code.HTTP_200_OK, status=True, msg="Retrieved user data.", data=serialized
@@ -278,7 +278,7 @@ class NurseryRetreiveUpdateDeleteApiView(APIView):
 
     def put(self, request):
         try:
-            user = Nursery.objects.exclude(isDeleted=True).get(pk=request.user.id)
+            user = Nursery.objects.exclude(isdeleted=True).get(pk=request.user.id)
             if "ratings" in request.data:
                 del request.data["ratings"]
             if "email" in request.data:
@@ -297,7 +297,7 @@ class NurseryRetreiveUpdateDeleteApiView(APIView):
             if serializer_class.is_valid(raise_exception=True):
                 serializer_class.save()
                 data = serializer_class.data
-                return response(status_code=stat_code.HTTP_200_OK, status=True, msg="Retrieved user data.", data=data)
+                return response(status_code=stat_code.HTTP_200_OK, status=True, msg="Updated user data.", data=data)
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg=serializer_class.errors)
         except Nursery.DoesNotExist as ude:
             return response(status_code=stat_code.HTTP_403_FORBIDDEN, status=False, msg="User does not exist.")
