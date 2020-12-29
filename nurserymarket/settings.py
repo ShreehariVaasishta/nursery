@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "user_management",
     "plants",
+    "cloudinary",
 ]
 
 if DEBUG:
@@ -166,3 +167,12 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
 }
+
+# Cloudinary
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": "dxe4y0rbh",
+    "API_KEY": "682258492221855",
+    "API_SECRET": "XjAG5aYI0RAw9WIcA9Jz3m5aMv8",
+}
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
