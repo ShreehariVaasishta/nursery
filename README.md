@@ -15,6 +15,7 @@ Please Refer [requirements.txt](https://github.com/ShreehariVaasishta/nursery/bl
 **setup**
 
 -  Create a <b>PostgreSQL database.</b> and assign values for these in `settings.py` file.<br>
+          
         SECRET_KEY = <your_django_secret_key>
         NAME = <database_name>
         USER = <database_user>
