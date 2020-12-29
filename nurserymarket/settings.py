@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "user_management",
     "plants",
     "cloudinary",
+    "corsheaders",
 ]
 
 if DEBUG:
@@ -57,6 +58,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -137,11 +139,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = "/static/"
-
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 # Extra places for collectstatic to find static files.
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+COMPRESS_ENABLED = os.environ.get("COMPRESS_ENABLED", False)
 
 # Media
 MEDIA_ROOT = os.path.abspath("..")
@@ -176,3 +179,24 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+# Deploy
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+# SECURE_HSTS_SECONDS = 31536000
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_SSL_REDIRECT = True
+# SECURE_HSTS_PRELOAD = True
+
+# Cors
+# CORS_ALLOWED_ORIGINS = [
+#     "https://dphi-nursery-sde.herokuapp.com",
+# ]
+# CORS_ALLOW_METHODS = [
+#     "DELETE",
+#     "GET",
+#     "OPTIONS",
+#     "PATCH",
+#     "POST",
+#     "PUT",
+# ]
