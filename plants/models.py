@@ -13,7 +13,7 @@ class Plants(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
     name = models.CharField(_("Plant Name"), max_length=100, blank=False, null=False)
     owner = models.ForeignKey(Nursery, blank=False, null=False, on_delete=models.CASCADE)
-    image = models.FileField(upload_to=image_upload_path, blank=True, null=True)
+    plant_images = models.FileField(upload_to=image_upload_path, blank=True, null=True)
     plant_description = models.TextField(_("Plant Description"), max_length=200)
     price = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
     inStock = models.BooleanField(default=True)
@@ -31,9 +31,9 @@ class Plants(models.Model):
 
     @property
     def get_image_path(self):
-        if not self.image:
+        if not self.plant_images:
             return None
-        return self.image.path
+        return self.plant_images.path
 
 
 class Cart(models.Model):
